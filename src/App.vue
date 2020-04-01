@@ -1,28 +1,32 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Menu></Menu>
+    <div class="ui two stackable grid">
+      <div class="twelve wide column">
+    <CardList/>
+      </div>
+      <div class="four wide column">
+    <CardView />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import CardView from './components/CardView';
+import Menu from './components/Menu';
+import CardList from './components/CardList';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    CardView,
+    Menu,
+    CardList
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
 </style>
