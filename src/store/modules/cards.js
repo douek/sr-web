@@ -1,5 +1,4 @@
-//import supermemo2 from 'supermemo2'
-
+import supermemo2 from 'supermemo2'
 
 const state ={
     cardList: [],
@@ -10,37 +9,38 @@ const getters = {
     allCards: state => state.cardList,
     getNextId: state => state.nextId,
     getCardsForToday: state=>{
-        //filter on card list for what is appearsin 0
-        console.log("TODO ", state)
+      return (state.cardList.filter(card => card.appearsIn == 0));
     },
 };
 
 const actions = {
     createOrUpdateCard: ({commit}, card) =>{
+        // add supermemo fields
+        card.factor = 2.5;
+        card.schedule = 1;
+        card.appearsIn =0;
         commit('updateToList',card);
-        commit('updateNextID');
-        // introduce to supermemo
-        // let sr = {factor: 2.5,
-        //     schedule: 1,
-        //    appearsIn: 1};
-        
     },
     deleteCard: ({commit}, card) =>{
        commit('deleteFromList', card.date);
     },
-    // superMemoCardCalc: ({commit}, card, quality) =>{
-    //     // call super memo
-    //     let ret = supermemo2(quality, card.schedule, card.factor);
-    //     card.schedule = ret.schedule;
-    //     card.factor = ret.factor;
-    //     if (ret.isRepeatAgain) {
-    //         card.appearsIn = 0
-    //     }
-    //     else {
-    //         card.appearsIn = ret.schedule;
-    //     }
-
-    // }
+    superMemoCardCalc: ({commit}, input) =>{
+        // call super memo
+        console.log(input.card);
+        console.log(input.quality)
+        let ret = supermemo2(input.quality, input.card.schedule, input.card.factor);
+        console.log(ret);
+        let c = {...input.card}
+        c.schedule = ret.schedule;
+        c.factor = ret.factor;
+        if (ret.isRepeatAgain) {
+            c.appearsIn = 0
+        }
+        else {
+            c.appearsIn = ret.schedule;
+        }
+        commit('updateToList',c);
+    }
 }
 
 const mutations = {
@@ -54,6 +54,8 @@ const mutations = {
             list[card_index] = card;
         } else{
             list.push(card);
+            let next = Number(state.nextId) + 1;
+            state.nextId = next;
         } 
         state.cardList = list;
     },
@@ -63,10 +65,6 @@ const mutations = {
     },
     setNextID: (state, next_id) => {
         state.nextId = next_id;
-    },
-    updateNextID: (state) => {
-        let next = Number(state.nextId) + 1;
-        state.nextId = next;
     },
 };
 

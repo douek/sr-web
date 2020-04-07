@@ -10,7 +10,7 @@
     <th>Date of creation</th>
   </tr></thead>
   <tbody>
-    <tr  v-for="card in allCards" :key="card.id" @click="onSelectedCard(card)">
+    <tr  v-for="card in allCards" :class="{ active : active_el == card.id }" :key="card.id" @click="onSelectedCard(card)">
       <td>{{card.id}}</td>
       <td>{{card.front}}</td>
       <td>{{card.url}}</td>
@@ -29,8 +29,12 @@ export default {
     computed: {
         ...mapGetters(['allCards','getNextId']),
     },
+    data:()=>{
+       return{ active_el: 0 }
+    },
     methods :{
         onSelectedCard(card) {
+            this.active_el = card.id;
             this.$emit('cardSelection', card);
         },
         onSelectedNewCard() {
@@ -40,8 +44,9 @@ export default {
                 url: "",
                 front: "",
                 back: "",
-                clue:""
+                hint:"",
             };
+            this.active_el = card.id;
             this.$emit('cardSelection', card);
         },
     },

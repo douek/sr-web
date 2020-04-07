@@ -1,5 +1,5 @@
 <template>
-  <div v-if="card" class="ui form container">
+  <div v-if="card" class="ui form padded container">
       <div class="field">
     <label class="inMiddle">URL</label>
     <input v-model="card.url" type="text" placeholder="url">
@@ -13,8 +13,8 @@
     <textarea v-model="card.back"></textarea>
   </div>
     <div class="field">
-    <label class="inMiddle">Clue (optional)</label>
-    <textarea v-model="card.clue" rows="2"></textarea>
+    <label class="inMiddle">hint (optional)</label>
+    <textarea v-model="card.hint" rows="2"></textarea>
   </div>
   <div>
  <button class="ui primary button" @click="createOrUpdateCard({...card})">
