@@ -1,5 +1,7 @@
 import Vuex from 'vuex';
 import Vue from 'vue';
+import createPersistedState from "vuex-persistedstate";
+
 import cards from './modules/cards';
 
 
@@ -9,4 +11,5 @@ export default new Vuex.Store({
     modules:{
         cards
     },
+    plugins: [createPersistedState()]
 })
