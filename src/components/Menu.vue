@@ -4,8 +4,8 @@
       <a class="active item">SR</a>
     </div>
     <div class="right menu">
-      <a class="ui item">Card List</a>
-      <a class="ui item">Start Session</a>
+      <router-link to="/" class="ui item">Card List</router-link>
+      <router-link to="/session" class="ui item">Start Session</router-link>
       <a class="ui item">Login</a>
     </div>
   </div>

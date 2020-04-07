@@ -1,23 +1,23 @@
 <template>
-  <div class="ui form container">
+  <div v-if="card" class="ui form container">
       <div class="field">
     <label class="inMiddle">URL</label>
-    <input type="text" placeholder="url">
+    <input v-model="card.url" type="text" placeholder="url">
   </div>
   <div class="field">
     <label class="inMiddle">Front Card</label>
-    <textarea></textarea>
+    <textarea v-model="card.front"></textarea>
   </div>
     <div class="field">
     <label class="inMiddle">Back Card</label>
-    <textarea></textarea>
+    <textarea v-model="card.back"></textarea>
   </div>
     <div class="field">
     <label class="inMiddle">Clue (optional)</label>
-    <textarea rows="2"></textarea>
+    <textarea v-model="card.clue" rows="2"></textarea>
   </div>
   <div>
- <button class="ui primary button">
+ <button class="ui primary button" @click="createOrUpdateCard({...card})">
   Save
 </button>
 <button class="right floated ui red button">
@@ -26,10 +26,17 @@
   </div>
   </div>
 </template>
-
 <script>
+import { mapActions } from 'vuex';
+
 export default {
-  name: "CardView"
+  name: "CardView",
+  props:{
+      card: Object
+  },
+  methods:{
+      ...mapActions(['createOrUpdateCard']),
+  },
 };
 </script>
 
