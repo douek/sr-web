@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
 
 export default {
     name: "CardList",
@@ -30,7 +30,6 @@ export default {
         ...mapGetters(['allCards','getNextId']),
     },
     methods :{
-        ...mapActions(['fetchCardList']),
         onSelectedCard(card) {
             this.$emit('cardSelection', card);
         },
@@ -47,7 +46,6 @@ export default {
         },
     },
     created(){
-        this.fetchCardList();
         this.onSelectedNewCard;
     }
 }

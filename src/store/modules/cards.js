@@ -1,10 +1,9 @@
 //import supermemo2 from 'supermemo2'
-import api from '../../api/localFile';
 
 
 const state ={
-    cardList: window.localStorage.getItem('cards_list'),
-    nextId : window.localStorage.getItem('next_id')
+    cardList: [],
+    nextId : 100
 };
 
 const getters = {
@@ -17,11 +16,6 @@ const getters = {
 };
 
 const actions = {
-    fetchCardList: async ({commit}) => {
-        const data = await api.fetchCardsFromLocalFile();
-        commit('setList',data.cardList);
-        commit('setNextID',data.nextId);
-    },
     createOrUpdateCard: ({commit}, card) =>{
         commit('updateToList',card);
         commit('updateNextID');
@@ -50,18 +44,9 @@ const actions = {
 }
 
 const mutations = {
-    initList: (state) =>{
-        if(localStorage.getItem('cards_list')) {
-            // Replace the state object with the stored item
-            this.replaceState(
-                Object.assign(state, JSON.parse(localStorage.getItem('store')))
-            );
-        }
-    },
     setList: (state, list) =>{
         state.cardList = list;
-        window.localStorage.setItem('cards_list', JSON.stringify(list));
-    },
+        },
     updateToList: (state, card) =>{
         let list = [...state.cardList];
         let card_index = list.findIndex( c => Number(c.id) === Number(card.id));
@@ -71,7 +56,6 @@ const mutations = {
             list.push(card);
         } 
         state.cardList = list;
-        window.localStorage.setItem('cards_list', JSON.stringify(list));
     },
     deleteFromList: (state, card_id) =>{
         let card_index = state.cardList.findIndex( c => Number(c.id) == Number(card_id));
@@ -79,12 +63,10 @@ const mutations = {
     },
     setNextID: (state, next_id) => {
         state.nextId = next_id;
-        window.localStorage.setItem('next_id',next_id);
     },
     updateNextID: (state) => {
         let next = Number(state.nextId) + 1;
         state.nextId = next;
-        window.localStorage.setItem('next_id',next);
     },
 };
 
@@ -92,5 +74,5 @@ export default {
     state,
     getters,
     actions,
-    mutations
+    mutations,
 }
