@@ -8,14 +8,25 @@
     >
       <CardSession :card="c" />
       <div class="ui clearing divider"></div>
-      <PointsBar :card="c"/>
+      <PointsBar :submmited="false" :card="c"/>
     </div>
+    <button
+      class="ui primary button"
+      @click="startSession"
+    >Repeat low points cards (below 4)</button>
+    <button
+      class="ui positive button"
+      @click="startSession"
+    >End session</button>
     </div>
         <button
       class="ui primary button"
-      v-else
+      v-else-if="getSessionCount > 0"
       @click="startSession"
     >Start today session</button>
+    <div v-else class="ui blue message">
+      <div>There are no card for today</div>
+    </div>
     <div class="ui clearing divider"></div>
 
     <div>
@@ -39,18 +50,19 @@ import CardSession from "./CardSession";
 export default {
   name: "Session",
   data() {
-    return { clickedToStart: false, };
+    return { clickedToStart: false, toSubmit: false};
   },
   components: {
     CardSession,
     PointsBar
   },
   computed: {
-    ...mapGetters(["getCardsForToday"])
+    ...mapGetters(['getCardsForToday','getSessionCount']),
   },
   methods: {
     startSession(){
       this.clickedToStart = true;
+      this.toSubmit = false;
     },
   }
 };

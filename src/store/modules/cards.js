@@ -8,9 +8,13 @@ const state ={
 const getters = {
     allCards: state => state.cardList,
     getNextId: state => state.nextId,
-    getCardsForToday: state=>{
+    getCardsForToday: state => {
       return (state.cardList.filter(card => card.appearsIn == 0));
     },
+    getSessionCount: state => {
+        console.log(state.cardList.filter(card => card.appearsIn == 0).length);
+        return (state.cardList.filter(card => card.appearsIn == 0).length);
+    }
 };
 
 const actions = {
