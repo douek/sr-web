@@ -1,6 +1,6 @@
 <template>
   <div class="extra content">
-    <div v-if="!submmited" class="ui form">
+    <div v-if="!card.submitted" class="ui form">
       <div class="inline fields">
         <label :for="getName">Select your points reuslt:</label>
         <div class="field">
@@ -56,12 +56,11 @@ import { mapActions } from 'vuex';
 export default {
   name: "PointsBar",
   props: {
-    card: Object
+    card: Object,
   },
   data() {
     return {
       quality: "",
-      submmited:false
     };
   },
   computed: {
@@ -72,7 +71,6 @@ export default {
   methods: {
     ...mapActions(['superMemoCardCalc']),
     onSubmit(){
-      this.submmited = true;     
       let input = {
         card: this.card,
         quality: this.quality

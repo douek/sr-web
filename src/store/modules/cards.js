@@ -12,7 +12,6 @@ const getters = {
       return (state.cardList.filter(card => card.appearsIn == 0));
     },
     getSessionCount: state => {
-        console.log(state.cardList.filter(card => card.appearsIn == 0).length);
         return (state.cardList.filter(card => card.appearsIn == 0).length);
     }
 };
@@ -30,13 +29,11 @@ const actions = {
     },
     superMemoCardCalc: ({commit}, input) =>{
         // call super memo
-        console.log(input.card);
-        console.log(input.quality)
         let ret = supermemo2(input.quality, input.card.schedule, input.card.factor);
-        console.log(ret);
         let c = {...input.card}
         c.schedule = ret.schedule;
         c.factor = ret.factor;
+        c.submitted = true;
         if (ret.isRepeatAgain) {
             c.appearsIn = 0
         }
@@ -44,6 +41,12 @@ const actions = {
             c.appearsIn = ret.schedule;
         }
         commit('updateToList',c);
+    },
+    resetCardSubmitted:({commit}, list) => {
+        list.forEach((c) => {
+            c.submitted = false;
+            commit('updateToList',c);
+        })
     }
 }
 

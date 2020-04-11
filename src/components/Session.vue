@@ -8,11 +8,11 @@
     >
       <CardSession :card="c" />
       <div class="ui clearing divider"></div>
-      <PointsBar :submmited="false" :card="c"/>
+      <PointsBar :card="c"/>
     </div>
     <button
       class="ui primary button"
-      @click="startSession"
+      @click="resetCardSubmitted(getCardsForToday)"
     >Repeat low points cards (below 4)</button>
     <button
       class="ui positive button"
@@ -43,14 +43,16 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import PointsBar from "./PointsBar";
 import CardSession from "./CardSession";
 
 export default {
   name: "Session",
   data() {
-    return { clickedToStart: false, toSubmit: false};
+    return { 
+      clickedToStart: false,
+    };
   },
   components: {
     CardSession,
@@ -60,10 +62,10 @@ export default {
     ...mapGetters(['getCardsForToday','getSessionCount']),
   },
   methods: {
+    ...mapActions(['resetCardSubmitted']),
     startSession(){
       this.clickedToStart = true;
-      this.toSubmit = false;
-    },
+          },
   }
 };
 </script>

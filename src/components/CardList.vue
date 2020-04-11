@@ -45,6 +45,7 @@ export default {
                 front: "",
                 back: "",
                 hint:"",
+                submitted:false
             };
             this.active_el = card.id;
             this.$emit('cardSelection', card);
