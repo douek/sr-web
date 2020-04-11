@@ -22,10 +22,10 @@ const actions = {
         card.factor = 2.5;
         card.schedule = 1;
         card.appearsIn =0;
-        commit('updateToList',card);
+        commit('UPDATE_OR_CREATE_CARD',card);
     },
     deleteCard: ({commit}, card) =>{
-       commit('deleteFromList', card.date);
+       commit('DELETE_CARD', card.date);
     },
     superMemoCardCalc: ({commit}, input) =>{
         // call super memo
@@ -40,21 +40,22 @@ const actions = {
         else {
             c.appearsIn = ret.schedule;
         }
-        commit('updateToList',c);
+        commit('UPDATE_OR_CREATE_CARD',c);
     },
     resetCardSubmitted:({commit}, list) => {
         list.forEach((c) => {
             c.submitted = false;
-            commit('updateToList',c);
+            commit('UPDATE_OR_CREATE_CARD',c);
         })
     }
 }
 
-const mutations = {
-    setList: (state, list) =>{
+export const mutations = {
+    SET_LIST (state, list) {
         state.cardList = list;
-        },
-    updateToList: (state, card) =>{
+    },
+
+    UPDATE_OR_CREATE_CARD (state, card) {
         let list = [...state.cardList];
         let card_index = list.findIndex( c => Number(c.id) === Number(card.id));
         if (card_index != -1){
@@ -66,11 +67,13 @@ const mutations = {
         } 
         state.cardList = list;
     },
-    deleteFromList: (state, card_id) =>{
+
+    DELETE_CARD (state, card_id) {
         let card_index = state.cardList.findIndex( c => Number(c.id) == Number(card_id));
         state.cardList.splice(card_index, 1);
     },
-    setNextID: (state, next_id) => {
+
+    SET_NEXT_ID (state, next_id) {
         state.nextId = next_id;
     },
 };
