@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import App from './App.vue'
 import Session from './components/Session';
 import MainView from './components/MainView';
 

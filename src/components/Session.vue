@@ -10,12 +10,23 @@
       <div class="ui clearing divider"></div>
       <PointsBar :card="c"/>
     </div>
+    <button
+      class="ui primary button"
+      @click="resetCardSubmitted(getCardsForToday)"
+    >Repeat low points cards (below 4)</button>
+    <button
+      class="ui positive button"
+      @click="startSession"
+    >End session</button>
     </div>
         <button
       class="ui primary button"
-      v-else
+      v-else-if="getSessionCount > 0"
       @click="startSession"
     >Start today session</button>
+    <div v-else class="ui blue message">
+      <div>There are no card for today</div>
+    </div>
     <div class="ui clearing divider"></div>
 
     <div>
@@ -32,26 +43,29 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import PointsBar from "./PointsBar";
 import CardSession from "./CardSession";
 
 export default {
   name: "Session",
   data() {
-    return { clickedToStart: false, };
+    return { 
+      clickedToStart: false,
+    };
   },
   components: {
     CardSession,
     PointsBar
   },
   computed: {
-    ...mapGetters(["getCardsForToday"])
+    ...mapGetters(['getCardsForToday','getSessionCount']),
   },
   methods: {
+    ...mapActions(['resetCardSubmitted']),
     startSession(){
       this.clickedToStart = true;
-    },
+          },
   }
 };
 </script>
