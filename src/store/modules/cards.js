@@ -1,18 +1,18 @@
 import supermemo2 from 'supermemo2'
 
 const state ={
-    cardList: [],
+    cards: {},
     nextId : 100
 };
 
 const getters = {
-    allCards: state => state.cardList,
+    allCards: state => state.cards,
     getNextId: state => state.nextId,
     getCardsForToday: state => {
-      return (state.cardList.filter(card => card.appearsIn == 0));
+        return Object.values(state.cards).filter(card => card.appearsIn == 0)
     },
     getSessionCount: state => {
-        return (state.cardList.filter(card => card.appearsIn == 0).length);
+        return Object.values(state.cards).filter(card => card.appearsIn == 0).length;
     }
 };
 
@@ -51,31 +51,21 @@ const actions = {
 }
 
 export const mutations = {
-    SET_LIST (state, list) {
-        state.cardList = list;
-    },
-
     UPDATE_OR_CREATE_CARD (state, card) {
-        let list = [...state.cardList];
-        let card_index = list.findIndex( c => Number(c.id) === Number(card.id));
-        if (card_index != -1){
-            list[card_index] = card;
-        } else{
-            list.push(card);
-            let next = Number(state.nextId) + 1;
+        let cards = {...state.cards};
+        if (!state.cards[card.id]) {
+            let next = state.nextId + 1;
             state.nextId = next;
-        } 
-        state.cardList = list;
+        }
+        cards[card.id] = card;
+        state.cards= cards;
     },
 
     DELETE_CARD (state, card_id) {
-        let card_index = state.cardList.findIndex( c => Number(c.id) == Number(card_id));
-        state.cardList.splice(card_index, 1);
+        let card_index = state.cards.findIndex( c => Number(c.id) == Number(card_id));
+        state.cards.splice(card_index, 1);
     },
 
-    SET_NEXT_ID (state, next_id) {
-        state.nextId = next_id;
-    },
 };
 
 export default {
