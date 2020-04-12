@@ -1,35 +1,12 @@
 import { mutations } from "../../src/store/modules/cards"
 
-describe("setList", () => {
-    it("add a card to the list  ", () => {
-        const state = {
-            cardList: [],
-        }
-        
-        const card = {
-            id: 1,
-            date: Date.now(),
-            url: "http://google.com",
-            front: "apple",
-            back: "fruit",
-            hint:"fr",
-        }
-        
-        mutations.SET_LIST(state, [card])
-        
-        expect(state).toEqual({
-            cardList: [card]
-        })
-    })
-})
-
 describe("UPDATE_OR_CREATE_CARD", () => {
     it("add a new card  ", () => {
         const state = {
-            cardList: [],
+            cards: {},
             nextId: 1
         }
-        
+
         const card = {
             id: 1,
             date: Date.now(),
@@ -38,16 +15,21 @@ describe("UPDATE_OR_CREATE_CARD", () => {
             back: "fruit",
             hint:"fr",
         }
-        
-        mutations.UPDATE_OR_CREATE_CARD(state, card)
-        expect(state).toEqual({
-            cardList: [card],
+
+        const expectedState = {
+            cards: {
+                1: card,
+            },
             nextId: 2
-        })
-        
+        }
+
+        mutations.UPDATE_OR_CREATE_CARD(state, card)
+
+        expect(state).toEqual(expectedState)        
     })
     
     it("update an existing card  ", () => {
+
         const existingCard = {
             id: 1,
             date: Date.now(),
@@ -56,12 +38,11 @@ describe("UPDATE_OR_CREATE_CARD", () => {
             back: "fruit",
             hint:"fr",
         }
-        
+
         const state = {
-            cardList: [existingCard],
-            nextId: 1
+            cards: {1:existingCard},
+            nextId: 2
         }
-        
         const card = {
             id: 1,
             date: Date.now(),
@@ -70,13 +51,15 @@ describe("UPDATE_OR_CREATE_CARD", () => {
             back: "fruit",
             hint:"fr",
         }
+
+        const expectedState = {
+            cards: {1:card},
+            nextId: 2
+        }
         
         mutations.UPDATE_OR_CREATE_CARD(state, card)
-        expect(state).toEqual({
-            cardList: [card],
-            nextId: 1
-        })
         
+        expect(state).toEqual(expectedState)
     })
     
 })
