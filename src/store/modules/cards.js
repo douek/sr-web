@@ -11,11 +11,15 @@ const getters = {
     getNextId: state => state.nextId,
     getCardsForToday: state => {
         let today = new moment();
-        return Object.values(state.cards).filter(card => card.appearsOn.diff(today,'d')< 1)
+        return Object.values(state.cards).filter(card => {
+            return today.isSameOrAfter(card.appearsOn,'day')
+        })
     },
     getSessionCount: state => {
         let today = new moment();
-        return Object.values(state.cards).filter(card => card.appearsOn.diff(today,'d')< 1).length;
+        return Object.values(state.cards).filter(card => {
+            return today.isSameOrAfter(card.appearsOn,'day')
+        }).length;
     }
 };
 
@@ -44,7 +48,6 @@ const actions = {
         }
         
         c.appearsOn = appearsOnDate;
-        console.log(c.appearsOn);
         commit('UPDATE_OR_CREATE_CARD',c);
     },
     resetCardSubmitted:({commit}, list) => {
