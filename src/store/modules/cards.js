@@ -1,4 +1,5 @@
-import supermemo2 from 'supermemo2'
+import supermemo2 from 'supermemo2';
+import moment from 'moment';
 
 const state ={
     cards: {},
@@ -9,10 +10,12 @@ const getters = {
     allCards: state => state.cards,
     getNextId: state => state.nextId,
     getCardsForToday: state => {
-        return Object.values(state.cards).filter(card => card.appearsIn == 0)
+        let today = new moment();
+        return Object.values(state.cards).filter(card => card.appearsOn.diff(today,'d')< 1)
     },
     getSessionCount: state => {
-        return Object.values(state.cards).filter(card => card.appearsIn == 0).length;
+        let today = new moment();
+        return Object.values(state.cards).filter(card => card.appearsOn.diff(today,'d')< 1).length;
     }
 };
 
@@ -21,7 +24,7 @@ const actions = {
         // add supermemo fields
         card.factor = 2.5;
         card.schedule = 1;
-        card.appearsIn =0;
+        card.appearsOn = new moment();
         commit('UPDATE_OR_CREATE_CARD',card);
     },
     deleteCard: ({commit}, card) =>{
@@ -34,12 +37,14 @@ const actions = {
         c.schedule = ret.schedule;
         c.factor = ret.factor;
         c.submitted = true;
-        if (ret.isRepeatAgain) {
-            c.appearsIn = 0
+        let appearsOnDate = new moment();
+     
+        if (!ret.isRepeatAgain) {
+            appearsOnDate.add(ret.schedule, 'd');
         }
-        else {
-            c.appearsIn = ret.schedule;
-        }
+        
+        c.appearsOn = appearsOnDate;
+        console.log(c.appearsOn);
         commit('UPDATE_OR_CREATE_CARD',c);
     },
     resetCardSubmitted:({commit}, list) => {
