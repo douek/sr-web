@@ -12,17 +12,23 @@
     </div>
     <button
       class="ui primary button"
+      v-if="getSessionCount > 0"
       @click="resetCardSubmitted(getCardsForToday)"
     >Repeat low points cards (below 4)</button>
+        <div v-else class="ui blue message">
+      <div>Yay! All cards reviewed! Click End session to finish and review result</div>
+    </div>
+    <router-link to = '/sessionReport'>
     <button
       class="ui positive button"
-      @click="startSession"
+      @click="endSession"
     >End session</button>
+    </router-link>
     </div>
         <button
       class="ui primary button"
       v-else-if="getSessionCount > 0"
-      @click="startSession"
+      @click="startSessionV"
     >Start today session</button>
     <div v-else class="ui blue message">
       <div>There are no card for today</div>
@@ -62,9 +68,10 @@ export default {
     ...mapGetters(['getCardsForToday','getSessionCount']),
   },
   methods: {
-    ...mapActions(['resetCardSubmitted']),
-    startSession(){
+    ...mapActions(['resetCardSubmitted', 'startSession', 'endSession']),
+    startSessionV(){
       this.clickedToStart = true;
+      this.startSession(this.getCardsForToday);
           },
   }
 };
