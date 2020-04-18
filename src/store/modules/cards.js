@@ -20,7 +20,13 @@ const getters = {
         return Object.values(state.cards).filter(card => {
             return today.isSameOrAfter(card.appearsOn,'day')
         }).length;
-    }
+    },
+    getSubmittedCards: state => {
+        let today = new moment();
+        return Object.values(state.cards).filter(card => {
+            return today.isSame(card.currSession, 'day');
+        })
+    },
 };
 
 const actions = {
@@ -29,6 +35,10 @@ const actions = {
         card.factor = 2.5;
         card.schedule = 1;
         card.appearsOn = new moment();
+        card.lastSession = null;
+        card.currSession = null;
+        card.repeated = 0;
+        card.date = new moment();
         commit('UPDATE_OR_CREATE_CARD',card);
     },
     deleteCard: ({commit}, card) =>{
@@ -41,12 +51,14 @@ const actions = {
         c.schedule = ret.schedule;
         c.factor = ret.factor;
         c.submitted = true;
+        c.repeated += 1;
+        c.lastQuality = input.quality;
         let appearsOnDate = new moment();
      
         if (!ret.isRepeatAgain) {
             appearsOnDate.add(ret.schedule, 'd');
         }
-        
+        c.currSession = new moment();
         c.appearsOn = appearsOnDate;
         commit('UPDATE_OR_CREATE_CARD',c);
     },
@@ -55,7 +67,28 @@ const actions = {
             c.submitted = false;
             commit('UPDATE_OR_CREATE_CARD',c);
         })
-    }
+    },
+    startSession: ({commit}, list) => {
+        list.forEach(c => {
+            if (!c.currSession){
+                c.lastSession = null;
+            }
+            else{
+                c.lastSession = moment(c.currSession);
+            }
+            c.currSession = null;
+            c.repeated = 0;
+            commit('UPDATE_OR_CREATE_CARD',c);
+        })
+    },
+    endSession: ({commit}, list) => {
+        list.forEach(c =>{
+            let appearsOnDate = new moment();
+            appearsOnDate.add(c.schedule, 'd');
+            c.appearsOn = appearsOnDate;
+            commit('UPDATE_OR_CREATE_CARD',c);
+        })
+    },
 }
 
 export const mutations = {

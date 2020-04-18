@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Session from './components/Session';
 import MainView from './components/MainView';
+import SessionReport from './components/SessionReport';
 
 Vue.use(Router)
 
@@ -17,6 +18,11 @@ export default new Router({
       path: '/session',
       name: 'session',
       component: Session
+    },
+    {
+      path: '/sessionReport',
+      name: 'sessionReport',
+      component: SessionReport
     }
   ]
 })
