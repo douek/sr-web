@@ -38,6 +38,7 @@ const actions = {
         card.lastSession = null;
         card.currSession = null;
         card.repeated = 0;
+        card.date = new moment();
         commit('UPDATE_OR_CREATE_CARD',card);
     },
     deleteCard: ({commit}, card) =>{
@@ -69,7 +70,12 @@ const actions = {
     },
     startSession: ({commit}, list) => {
         list.forEach(c => {
-            c.lastSession = moment(c.currSession);
+            if (!c.currSession){
+                c.lastSession = null;
+            }
+            else{
+                c.lastSession = moment(c.currSession);
+            }
             c.currSession = null;
             c.repeated = 0;
             commit('UPDATE_OR_CREATE_CARD',c);

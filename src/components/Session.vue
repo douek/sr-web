@@ -21,7 +21,7 @@
     <router-link to = '/sessionReport'>
     <button
       class="ui positive button"
-      @click="endSession"
+      @click="endSession(getCardsForToday)"
     >End session</button>
     </router-link>
     </div>

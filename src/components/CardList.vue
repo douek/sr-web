@@ -40,7 +40,6 @@ export default {
         onSelectedNewCard() {
             let card = {
                 id: this.getNextId,
-                date: Date.now(),
                 url: "",
                 front: "",
                 back: "",
