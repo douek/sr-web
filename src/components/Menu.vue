@@ -6,14 +6,19 @@
     <div class="right menu">
       <router-link to="/" class="ui item">Card List</router-link>
       <router-link to="/session" class="ui item">Start Session</router-link>
-      <a class="ui item">Login</a>
+      <router-link to="/login" class="ui item">{{this.user}}</router-link>
     </div>
   </div>
 </template>
 
 <script>
+
 export default {
-  name: "Menu"
+  name: "Menu",
+  props:{
+  
+  user: String
+  }
 };
 </script>
 

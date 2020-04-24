@@ -1,5 +1,6 @@
 import supermemo2 from 'supermemo2';
 import moment from 'moment';
+import firebase from 'firebase'
 
 const state ={
     cards: {},
@@ -100,6 +101,20 @@ export const mutations = {
         }
         cards[card.id] = card;
         state.cards= cards;
+        if(localStorage.getItem('app.SignIn')=='1')
+        firebase.database().ref(firebase.auth().currentUser.uid+'/cards/'+card.id).set({
+            url: card.url,
+            front: card.front,
+            back: card.back,
+            hint: card.hint,
+            factor :card.factor,
+            schedule:card.schedule,
+            appearsOn: card.appearsOn.toString(),
+            lastSession: card.lastSession,
+            currSession: card.currSession,
+            repeated: card.repeated,
+            date: card.date.toString()
+          });
     },
 
     DELETE_CARD (state, card_id) {
