@@ -9,11 +9,21 @@
 
 <script>
 import Menu from './components/Menu';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'App',
   components: {
     Menu
+  },
+  methods:{
+    ...mapActions(['fetchUser'])
+  },
+  mounted(){
+    this.$firebase.auth().onAuthStateChanged(user => {
+      this.fetchUser(user);
+    });
+
   }
 }
 </script>

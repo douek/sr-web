@@ -3,13 +3,15 @@ import Vue from 'vue';
 import createPersistedState from "vuex-persistedstate";
 
 import cards from './modules/cards';
+import user from './modules/user';
 
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
     modules:{
-        cards
+        cards,
+        user
     },
     plugins: [createPersistedState()]
 })
