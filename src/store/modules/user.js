@@ -1,7 +1,8 @@
 const state = {
     user: {
         loggedIn: false,
-        data: null
+        data: null,
+        gToken: null
       }
 }
 
@@ -22,6 +23,9 @@ const getters =  {
       } else {
         commit("SET_USER", null);
       }
+    },
+    googleAuth({ commit }, token){
+      commit('SET_TOKEN', token);
     }
   }
 
@@ -31,6 +35,9 @@ const getters =  {
     },
     SET_USER(state, data) {
       state.user.data = data;
+    },
+    SET_TOKEN(state, token) {
+      state.user.gToken = token;
     }
 }
 
