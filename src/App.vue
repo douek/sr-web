@@ -17,13 +17,15 @@ export default {
     Menu
   },
   methods:{
-    ...mapActions(['fetchUser'])
+    ...mapActions(['fetchUser', 'fetchCardsFromDB'])
   },
   mounted(){
     this.$firebase.auth().onAuthStateChanged(user => {
       this.fetchUser(user);
+      if (user) {
+            this.fetchCardsFromDB();
+      }
     });
-
   }
 }
 </script>

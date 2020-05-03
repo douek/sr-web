@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "Menu",
@@ -21,12 +21,13 @@ export default {
     ...mapGetters(['user'])
   },
    methods: {
+     ...mapActions(['emptyStateOnLogout']),
     signout() {
       this.$firebase
         .auth()
         .signOut()
         .then(() => {
-          this.$router.replace('/login');
+          this.emptyStateOnLogout();
         },(err) => {
               console.log(err.message)         
               });
