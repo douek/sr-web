@@ -14,7 +14,7 @@
       <td>{{card.id}}</td>
       <td>{{card.front}}</td>
       <td>{{card.url}}</td>
-      <td>{{card.date}}</td>
+      <td>{{dateFormat(card.date)}}</td>
     </tr>
   </tbody>
 </table>
@@ -23,6 +23,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import moment from 'moment';
 
 export default {
     name: "CardList",
@@ -49,6 +50,9 @@ export default {
             this.active_el = card.id;
             this.$emit('cardSelection', card);
         },
+        dateFormat(dateISO){
+            return moment(dateISO).format('LLL');
+        }
     },
     created(){
         this.onSelectedNewCard;

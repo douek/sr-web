@@ -20,7 +20,7 @@
  <button class="ui primary button" @click="createOrUpdateCard({...card})">
   Save
 </button>
-<button class="right floated ui red button">
+<button @click="deleteCardCallback()" class="right floated ui red button">
   Delete
 </button>
   </div>
@@ -35,7 +35,12 @@ export default {
       card: Object
   },
   methods:{
-      ...mapActions(['createOrUpdateCard']),
+      ...mapActions(['createOrUpdateCard','deleteCard']),
+      deleteCardCallback(){
+                  let card = this.card;
+                  this.$emit('delete');
+                  this.deleteCard(card);
+      }
   },
 };
 </script>
