@@ -1,7 +1,7 @@
 <template>
     <div class="ui grid">
-    <div class="six wide centered floated column">
-        <div class="ui middle aligned center aligned container">
+    <div class="input-group six wide centered floated column">
+        <div class="ui middle center aligned container">
     <h2 class="ui blue header">
       <div class="content">
         Sign-up to SR-Web
@@ -69,3 +69,8 @@ export default {
     }
 }
 </script>
+<style scoped>
+.input-group{
+  min-width: 22rem;
+}
+</style>

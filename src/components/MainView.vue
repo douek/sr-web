@@ -5,7 +5,7 @@
     <CardList @cardSelection="onCardSelect"/>
       </div>
       <div class="four wide column">
-    <CardView :card="selectedCard" />
+    <CardView @delete="onCardDelete" :card="selectedCard" />
       </div>
     </div>
   </div>
@@ -29,6 +29,10 @@ export default {
       let viewCard = {...card};
       this.selectedCard = viewCard;
     },
+        onCardDelete(){
+      this.selectedCard = null;
+      this.$forceUpdate();
+    }
   } 
 }
 </script>

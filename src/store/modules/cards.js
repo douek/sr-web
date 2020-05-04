@@ -46,7 +46,7 @@ const actions = {
                     let data = snapshot.val();
                     console.log(data);
 
-                    let list = Object.entries(data);
+                    let list = data ? Object.entries(data) : [];
                     console.log(list);
                     commit('SET_LIST', list);
                 });
@@ -70,7 +70,7 @@ const actions = {
         commit('UPDATE_OR_CREATE_CARD', card);
     },
     deleteCard: ({ commit }, card) => {
-        commit('DELETE_CARD', card.date);
+        commit('DELETE_CARD', card.id);
     },
     superMemoCardCalc: ({ commit }, input) => {
         // call super memo
@@ -135,9 +135,10 @@ export const mutations = {
     },
 
     DELETE_CARD(state, card_id) {
-        // NOT priortized
-        let card_index = state.cards.findIndex(c => Number(c.id) == Number(card_id));
-        state.cards.splice(card_index, 1);
+        let cards = { ...state.cards };
+        delete cards[card_id];
+        state.cards = cards;
+        firebase.database().ref('users/' + firebase.auth().currentUser.uid + '/cards/' + card_id).remove();
     },
     
     SET_LIST(state, data){
