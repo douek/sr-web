@@ -44,20 +44,20 @@ const actions = {
                 .child(currentUser.uid)
                 .child('cards')
                 .once('value')
-                .then(function (snapshots) {
+                .then(snapshots => {
                     let cards = {};
                     snapshots.forEach(s => {
                         let { card } = s.val();
                         cards[card.id] = card;
                     })
-                    console.log("cards: ", cards);
+
                     commit('SET_LIST', cards);
                 });
             firebase.database().ref('users')
                 .child(currentUser.uid)
                 .child('nextId')
                 .once('value')
-                .then(function (snapshot) {
+                .then(snapshot => {
                     commit('SET_NEXT_ID', snapshot.val());
                 });
         }
