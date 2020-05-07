@@ -32,29 +32,33 @@ const getters = {
 };
 
 const actions = {
-    emptyStateOnLogout: ({commit}) =>{
+    emptyStateOnLogout: ({ commit }) => {
         console.log('calling logout');
         commit('EMPTY_STATE');
         router.push('/login');
     },
-    fetchCardsFromDB: ({commit}) => {
+    fetchCardsFromDB: ({ commit }) => {
         var currentUser = firebase.auth().currentUser;
         if (currentUser) {
-            firebase.database().ref('/users/' + currentUser.uid + '/cards/')
+            firebase.database().ref('users')
+                .child(currentUser.uid)
+                .child('cards')
                 .once('value')
-                .then(function (snapshot) {
-                    let data = snapshot.val();
-                    console.log(data);
-
-                    let list = data ? Object.entries(data) : [];
-                    console.log(list);
-                    commit('SET_LIST', list);
+                .then(function (snapshots) {
+                    let cards = {};
+                    snapshots.forEach(s => {
+                        let { card } = s.val();
+                        cards[card.id] = card;
+                    })
+                    console.log("cards: ", cards);
+                    commit('SET_LIST', cards);
                 });
-                firebase.database().ref('/users/' + currentUser.uid + '/nextId')
+            firebase.database().ref('users')
+                .child(currentUser.uid)
+                .child('nextId')
                 .once('value')
                 .then(function (snapshot) {
-                    let next = snapshot.val();
-                    console.log(next);
+                    commit('SET_NEXT_ID', snapshot.val());
                 });
         }
     },
@@ -122,39 +126,46 @@ const actions = {
 export const mutations = {
     UPDATE_OR_CREATE_CARD(state, card) {
         let cards = { ...state.cards };
-        if (!state.cards[card.id]) {
+        if (state.cards === null || !state.cards[card.id]) {
             let next = state.nextId + 1;
             state.nextId = next;
-            firebase.database().ref('users/' + firebase.auth().currentUser.uid + '/nextId').set({ next });
+            firebase.database().ref('users')
+                .child(firebase.auth().currentUser.uid)
+                .child('nextId')
+                .set({ next });
 
         }
+
         cards[card.id] = card;
         state.cards = cards;
-        console.log(firebase.auth().currentUser.uid);
-        firebase.database().ref('users/' + firebase.auth().currentUser.uid + '/cards/' + card.id).set({ card });
+
+        const ref = firebase.database().ref('users')
+            .child(firebase.auth().currentUser.uid)
+            .child('cards')
+            .push()
+        ref.set({ card });
     },
 
     DELETE_CARD(state, card_id) {
         let cards = { ...state.cards };
         delete cards[card_id];
         state.cards = cards;
-        firebase.database().ref('users/' + firebase.auth().currentUser.uid + '/cards/' + card_id).remove();
+        firebase.database().ref('users')
+            .child(firebase.auth().currentUser.uid)
+            .child('cards')
+            .child(card_id)
+            .remove();
     },
-    
-    SET_LIST(state, data){
-        let list = {};
-        console.log(data);
-        Array.prototype.forEach.call(data,c => {
-            list[c[0]] = c[1].card;
-        });
-        console.log(list);
-        state.cards = list;
+
+    SET_LIST(state, data) {
+        state.cards = data;
     },
-    SET_NEXT_ID(state, next_id){
+
+    SET_NEXT_ID(state, next_id) {
         state.nextId = next_id.next;
     },
 
-    EMPTY_STATE(state){
+    EMPTY_STATE(state) {
         state.cards = {};
         state.nextId = 0;
     },
