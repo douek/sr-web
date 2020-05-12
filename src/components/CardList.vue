@@ -10,11 +10,11 @@
     <th>Date of creation</th>
   </tr></thead>
   <tbody>
-    <tr  v-for="card in allCards" :class="{ active : active_el == card.id }" :key="card.id" @click="onSelectedCard(card)">
-      <td>{{card.id}}</td>
-      <td>{{card.front}}</td>
-      <td>{{card.url}}</td>
-      <td>{{dateFormat(card.date)}}</td>
+    <tr  v-for="c in allCards" :class="{ active : active_el == c.card.id }" :key="c.card.id" @click="onSelectedCard(c.card)">
+      <td>{{c.card.id}}</td>
+      <td>{{c.card.front}}</td>
+      <td>{{c.card.url}}</td>
+      <td>{{dateFormat(c.card.date)}}</td>
     </tr>
   </tbody>
 </table>
@@ -28,7 +28,7 @@ import moment from 'moment';
 export default {
     name: "CardList",
     computed: {
-        ...mapGetters(['allCards','getNextId']),
+        ...mapGetters(['allCards','getNewId']),
     },
     data:()=>{
        return{ active_el: 0 }
@@ -40,7 +40,7 @@ export default {
         },
         onSelectedNewCard() {
             let card = {
-                id: this.getNextId,
+                id: this.getNewId,
                 url: "",
                 front: "",
                 back: "",

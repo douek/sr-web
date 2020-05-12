@@ -2,15 +2,16 @@ import supermemo2 from 'supermemo2';
 import moment from 'moment';
 import firebase from 'firebase';
 import router from '../../router';
+import { v4 as uuidv4 } from 'uuid';
+
 
 const state = {
     cards: {},
-    nextId: 100
 };
 
 const getters = {
     allCards: state => state.cards,
-    getNextId: state => state.nextId,
+    getNewId: () => uuidv4(),
     getCardsForToday: state => {
         let today = new moment();
         return Object.values(state.cards).filter(card => {
@@ -44,21 +45,11 @@ const actions = {
                 .child(currentUser.uid)
                 .child('cards')
                 .once('value')
-                .then(snapshots => {
-                    let cards = {};
-                    snapshots.forEach(s => {
-                        let { card } = s.val();
-                        cards[card.id] = card;
-                    })
-
-                    commit('SET_LIST', cards);
-                });
-            firebase.database().ref('users')
-                .child(currentUser.uid)
-                .child('nextId')
-                .once('value')
                 .then(snapshot => {
-                    commit('SET_NEXT_ID', snapshot.val());
+                    console.log("snapshot: ", snapshot)
+                    let data = snapshot.val();
+                    console.log("val: ", data);
+                    commit('SET_LIST', data);
                 });
         }
     },
@@ -125,25 +116,18 @@ const actions = {
 
 export const mutations = {
     UPDATE_OR_CREATE_CARD(state, card) {
-        let cards = { ...state.cards };
-        if (state.cards === null || !state.cards[card.id]) {
-            let next = state.nextId + 1;
-            state.nextId = next;
-            firebase.database().ref('users')
-                .child(firebase.auth().currentUser.uid)
-                .child('nextId')
-                .set({ next });
-
-        }
-
-        cards[card.id] = card;
+        let cards = {...state.cards };
+        let c = {};
+        c["card"] = card;
+        cards[card.id] = c;
         state.cards = cards;
-
-        const ref = firebase.database().ref('users')
-            .child(firebase.auth().currentUser.uid)
-            .child('cards')
-            .push()
-        ref.set({ card });
+        console.log(firebase.auth().currentUser.uid);
+        firebase.database()
+        .ref('users')
+        .child(firebase.auth().currentUser.uid)
+        .child('cards')
+        .child(card.id)
+        .set({ card });
     },
 
     DELETE_CARD(state, card_id) {
@@ -156,18 +140,14 @@ export const mutations = {
             .child(card_id)
             .remove();
     },
-
-    SET_LIST(state, data) {
+    
+    SET_LIST(state, data){
         state.cards = data;
     },
 
-    SET_NEXT_ID(state, next_id) {
-        state.nextId = next_id.next;
-    },
 
     EMPTY_STATE(state) {
         state.cards = {};
-        state.nextId = 0;
     },
 };
 
